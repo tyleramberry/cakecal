@@ -1,11 +1,12 @@
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Calendar, ClipboardList, DollarSign, Calculator, BarChart3, Timer, Menu, X } from 'lucide-react';
+import { Calendar, ClipboardList, DollarSign, Calculator, BarChart3, Timer, CalendarClock, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 const navItems = [
   { path: '/', label: 'Calendar', icon: Calendar },
   { path: '/orders', label: 'Orders', icon: ClipboardList },
+  { path: '/plan', label: 'Plan', icon: CalendarClock },
   { path: '/production', label: 'Production', icon: Timer },
   { path: '/payments', label: 'Payments', icon: DollarSign },
   { path: '/calculator', label: 'Calculator', icon: Calculator },

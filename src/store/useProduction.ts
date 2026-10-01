@@ -28,6 +28,7 @@ export interface Stage {
   elapsedMs: number; // time accumulated before the current run
   source: StageSource;
   newTechnique?: boolean;
+  plannedDate?: string; // yyyy-MM-dd, set by the planner or by hand
 }
 
 export interface OrderMeta {
@@ -52,6 +53,9 @@ interface ProductionState {
   templates: StageTemplate[];
   stages: Stage[];
   orderMeta: Record<string, OrderMeta>;
+  capacityHours: number[]; // hours you can work, Sunday..Saturday
+  setCapacity: (day: number, hours: number) => void;
+  setPlanned: (placements: Record<string, string | undefined>) => void;
   addStage: (stage: Omit<Stage, 'id' | 'status' | 'elapsedMs' | 'source'> & Partial<Stage>) => void;
   startStage: (id: string) => void;
   pauseStage: (id: string) => void;
@@ -78,6 +82,10 @@ export const useProduction = create<ProductionState>()(
       templates: DEFAULT_TEMPLATES,
       stages: [],
       orderMeta: {},
+      capacityHours: [3, 2, 2, 2, 2, 2, 6],
+      setCapacity: (day, hours) => set((s) => ({ capacityHours: s.capacityHours.map((h, i) => (i === day ? Math.max(0, hours) : h)) })),
+      setPlanned: (placements) =>
+        set((s) => ({ stages: s.stages.map((st) => (st.id in placements ? { ...st, plannedDate: placements[st.id] } : st)) })),
       addStage: (stage) =>
         set((s) => ({
           stages: [...s.stages, { id: generateId(), status: 'todo', elapsedMs: 0, source: 'timed', ...stage }],

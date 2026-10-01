@@ -228,6 +228,7 @@ function StageRow({ stage, now }: { stage: Stage; now: number }) {
         </div>
         <div className="text-xs text-muted-foreground mt-1">
           Estimate {formatMinutes(est)}
+          {stage.plannedDate && !done && <span> · planned {stage.plannedDate.slice(5).replace('-', '/')}</span>}
           {(done || actualMin > 0.5) && (
             <span className={over > 0.1 ? 'text-destructive' : over < -0.1 ? 'text-sage' : ''}>
               {' · '}actual {formatMinutes(actualMin)} ({over >= 0 ? '+' : ''}{Math.round(over * 100)}%)
